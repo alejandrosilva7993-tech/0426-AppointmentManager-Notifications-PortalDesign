@@ -1,0 +1,2667 @@
+<!--
+  Archivo autocontenido para GitHub: Add file > Upload files (un solo archivo).
+  Regenerar: python3 scripts/build-single-file-html.py
+  El repo completo con carpetas sigue en index.html + css/ + js/ + assets/
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      (function () {
+        try {
+          var k = "supplynet-theme";
+          var s = localStorage.getItem(k);
+          var dark =
+            s === "dark"
+              ? true
+              : s === "light"
+                ? false
+                : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+        } catch (e) {}
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Supplynet Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/primeicons@7.0.0/primeicons.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <style>
+/* === main.css === */
+/* Supplynet Portal — prototipo responsive (Figma Layout_Supply_1 + interacciones) */
+
+:root {
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 64px;
+  --sidebar-pi-toggle-size: 11.664px; /* otro 10% menor */
+  --sidebar-pi-nav-size: 16.2px; /* otro 10% menor */
+  --sidebar-nav-icon-size: var(--sidebar-pi-nav-size);
+  --topbar-height: 56px;
+  --color-bg-frame: #eaf4fa;
+  --color-sidebar: #00263a;
+  --color-border: #ced4da;
+  --color-topbar-border: #e5e5e5;
+  --color-text: #00263a;
+  --color-muted: #495057;
+  --color-accent: #3b82f6;
+  /* FAB chat: fijo en claro/oscuro (no seguir --color-accent del tema) */
+  --fab-chat-bg: #3b82f6;
+  --color-icon-muted: #6c757d;
+  --brand-logo-scale: 1.21;
+  --brand-text-scale: 1.1;
+  --transition-sidebar: 220ms ease;
+  --shell-lazy-fade: 0.745s;
+  --shell-lazy-fade-reduced: 0.259s;
+  --welcome-title-opacity-dur: 0.72s;
+  --welcome-title-transform-dur: 0.756s;
+  --welcome-title-opacity-dur-reduced: 0.324s;
+  /* Panel notificaciones: tokens alineados con acento/borde del shell (sustituibles por tema Prime) */
+  --notif-primary: var(--color-accent);
+  --notif-surface-border: var(--color-topbar-border);
+  --notif-unread-bg: rgba(59, 130, 246, 0.06);
+  --notif-unread-bg-hover: rgba(59, 130, 246, 0.09);
+  /* Contador no leídos (campana + badge en pestaña Unread) */
+  --notif-count-badge-bg: #dc2626;
+  --shadow-fab-chat:
+    0 2px 1px rgba(0, 0, 0, 0.2),
+    0 1px 1px rgba(0, 0, 0, 0.14),
+    0 1px 8px rgba(0, 0, 0, 0.12);
+  /* Superficies y estados (contrato tipo PrimeNG: overrides en html.dark) */
+  --color-body-bg: #c5d5de;
+  --color-surface-0: #ffffff;
+  --color-shell-solid: #b5d8e5;
+  --shell-gradient-start: #b5d8e5;
+  --shell-gradient-mid: #d9eaf1;
+  --shell-gradient-end: #eaf4fa;
+  --color-search-focus-border: #94a3b8;
+  --color-focus-ring: rgba(59, 130, 246, 0.2);
+  --shadow-overlay: 0 4px 16px rgba(0, 38, 58, 0.12);
+  --surface-hover: rgba(0, 38, 58, 0.06);
+  --surface-hover-muted: rgba(0, 38, 58, 0.04);
+  --color-ring-on-surface: #ffffff;
+  --color-on-primary: #ffffff;
+  --welcome-gradient: linear-gradient(90deg, #01283c 0%, #136e9e 100%);
+  --fab-focus-ring: #1d4ed8;
+}
+
+html.dark {
+  color-scheme: dark;
+  /* Marco / fondo un poco más profundo */
+  --color-body-bg: #0a0e18;
+  --color-bg-frame: #161f2e;
+  --color-sidebar: #071824;
+  --color-border: #475569;
+  --color-topbar-border: #334155;
+  --color-text: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-icon-muted: #cbd5e1;
+  --color-accent: #38bdf8;
+  --color-surface-0: #1e293b;
+  --color-shell-solid: #161f2e;
+  --shell-gradient-start: #141c2a;
+  /* Degradado amanecer: tonos alineados al marco un poco más bajos */
+  --shell-gradient-mid: #1b2738;
+  --shell-gradient-end: #223041;
+  /* Amanecer: fade algo más largo; reduced-motion sigue en --shell-lazy-fade-reduced */
+  --shell-lazy-fade: 1.05s;
+  --shell-lazy-fade-reduced: 0.35s;
+  --color-search-focus-border: #64748b;
+  --color-focus-ring: rgba(56, 189, 248, 0.28);
+  --shadow-overlay: 0 8px 28px rgba(0, 0, 0, 0.45);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --surface-hover-muted: rgba(255, 255, 255, 0.05);
+  --color-ring-on-surface: #1e293b;
+  --notif-unread-bg: rgba(56, 189, 248, 0.14);
+  --notif-unread-bg-hover: rgba(56, 189, 248, 0.22);
+  /* Azul ~30 % más vivo que #b5c4ce / #7d8f9a (mezcla 60/40 hacia #c2e6f3 / #7ebdd4) */
+  --welcome-gradient: linear-gradient(90deg, #f2f8fb 0%, #bad1dc 45%, #7ea1b1 100%);
+  --fab-focus-ring: #7dd3fc;
+  /* Mismo azul del FAB que en tema claro */
+  --fab-chat-bg: #3b82f6;
+}
+
+html.dark .topbar__icon-group .icon-btn img {
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+html.dark .search-field__icon {
+  filter: brightness(0) invert(1);
+  opacity: 0.42;
+}
+
+html.dark .brand-logo img {
+  filter: brightness(0) invert(1);
+  opacity: 0.96;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--color-body-bg);
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.drawer-open {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Marco fluido */
+.frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: var(--color-bg-frame);
+  overflow-x: hidden;
+}
+
+.frame--sidebar-static .sidebar,
+.frame--sidebar-static .icon-btn.icon-btn--sidebar,
+.frame--sidebar-static .icon-btn--sidebar__chevron,
+.frame--sidebar-static .nav-item__label {
+  transition: none !important;
+}
+
+.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  background: var(--color-shell-solid);
+}
+
+.app-shell__lazy-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--shell-gradient-start) 12.661%,
+    var(--shell-gradient-mid) 60.884%,
+    var(--shell-gradient-end) 105.85%
+  );
+  opacity: 0;
+  transition: opacity var(--shell-lazy-fade) ease-out;
+}
+
+/* Modo oscuro: curva más suave para el “amanecer” del degradado */
+html.dark .app-shell__lazy-bg {
+  transition: opacity var(--shell-lazy-fade) cubic-bezier(0.22, 0.65, 0.28, 1);
+}
+
+.app-shell.app-shell--welcome-loaded .app-shell__lazy-bg {
+  opacity: 1;
+}
+
+/* Topbar por encima de .app-main: mismo z-index hace que main capture clics sobre el
+   panel absoluto de notificaciones (no se “despliega” la interacción). */
+.app-shell > .topbar {
+  position: relative;
+  z-index: 210;
+}
+
+.app-shell > .app-main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fila bajo la topbar: sidebar + contenido (alineado a Figma) */
+.app-main {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Backdrop móvil (desktop: pantalla completa; móvil: solo bajo la topbar) */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 199;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity var(--transition-sidebar);
+  cursor: pointer;
+}
+
+.sidebar-backdrop:not([hidden]) {
+  display: block;
+}
+
+.sidebar-backdrop--visible {
+  opacity: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 0 0 var(--sidebar-width);
+  width: var(--sidebar-width);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 16px 12px;
+  background: var(--color-sidebar);
+  min-height: 0;
+  flex-shrink: 0;
+  transition:
+    width var(--transition-sidebar),
+    flex-basis var(--transition-sidebar),
+    padding var(--transition-sidebar),
+    transform var(--transition-sidebar);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.sidebar__collapse-row {
+  position: relative;
+  height: 42px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Mayor especificidad que .icon-btn { color: muted } para glifo PrimeIcons blanco */
+.icon-btn.icon-btn--sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: auto;
+  color: #fff;
+  transition: transform var(--transition-sidebar);
+}
+
+.icon-btn.icon-btn--sidebar:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.icon-btn--sidebar__chevron {
+  font-size: var(--sidebar-pi-toggle-size);
+  line-height: 1;
+  color: #fff;
+  transition: transform var(--transition-sidebar);
+}
+
+.icon-btn--sidebar__chevron::before {
+  color: #fff;
+}
+
+.sidebar__nav {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  color: #fff;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-item:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.nav-item__icon-wrap {
+  flex-shrink: 0;
+  width: var(--sidebar-nav-icon-size);
+  height: var(--sidebar-nav-icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-item__icon-wrap .pi {
+  font-size: var(--sidebar-pi-nav-size);
+  line-height: 1;
+  color: inherit;
+}
+
+.nav-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    opacity var(--transition-sidebar),
+    max-width var(--transition-sidebar);
+  max-width: 200px;
+  opacity: 1;
+}
+
+@media (min-width: 640px) {
+  .frame--sidebar-collapsed .sidebar__nav {
+    align-self: stretch;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+
+  /* Misma huella circular que .icon-btn del toggle: el hover no debe ser píldora */
+  .frame--sidebar-collapsed .nav-item {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    max-width: 42px;
+    padding: 0;
+    gap: 0;
+    border-radius: 28px;
+    box-sizing: border-box;
+  }
+
+  /* La etiqueta no debe participar en el flex para centrar solo el icono */
+  .frame--sidebar-collapsed .nav-item__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    border: 0;
+    white-space: nowrap;
+    max-width: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .frame--sidebar-collapsed .sidebar {
+    flex-basis: var(--sidebar-collapsed-width);
+    width: var(--sidebar-collapsed-width);
+    padding: 10px 8px 16px 8px;
+    align-items: center;
+  }
+
+  .frame--sidebar-collapsed .sidebar__collapse-row {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .frame--sidebar-collapsed .icon-btn--sidebar {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .frame--sidebar-collapsed .icon-btn--sidebar__chevron {
+    transform: scaleX(-1);
+  }
+}
+
+.content-column {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Topbar */
+.topbar {
+  position: relative;
+  z-index: 210;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  width: 100%;
+  min-height: var(--topbar-height);
+  padding: 10px 16px;
+  background: var(--color-surface-0);
+  border-bottom: 1px solid var(--color-topbar-border);
+  flex-shrink: 0;
+}
+
+/*
+ * Hamburguesa solo en vista muy estrecha (max-width: 639px). Debe ganar a .icon-btn { display: flex }.
+ */
+.icon-btn.topbar__menu-btn {
+  display: none;
+}
+
+.topbar__menu-btn .pi {
+  font-size: 1.125rem;
+}
+
+.topbar__menu-wrap {
+  display: none;
+  position: relative;
+  justify-self: start;
+}
+
+.mobile-nav-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 221;
+  width: min(288px, calc(100vw - 24px));
+  padding: 0;
+  background: var(--color-surface-0);
+  border: 1px solid var(--notif-surface-border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-overlay);
+  overflow: hidden;
+}
+
+.mobile-nav-panel__header {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--notif-surface-border);
+}
+
+.mobile-nav-panel__title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.mobile-nav-panel__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  max-height: min(360px, 55dvh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-nav-panel__link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.12s ease;
+}
+
+.mobile-nav-panel__link:hover {
+  background: var(--surface-hover);
+}
+
+.mobile-nav-panel__link:focus-visible {
+  outline: 2px solid var(--notif-primary);
+  outline-offset: 0;
+}
+
+.mobile-nav-panel__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  color: var(--color-icon-muted);
+}
+
+.mobile-nav-panel__icon .pi {
+  line-height: 1;
+}
+
+.brand-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.brand-logo {
+  position: relative;
+  width: calc(62px * var(--brand-logo-scale));
+  height: calc(27px * var(--brand-logo-scale));
+  flex-shrink: 0;
+}
+
+.brand-logo__supply {
+  position: absolute;
+  left: 0;
+  top: calc(7.39px * var(--brand-logo-scale));
+  width: calc(34.596px * var(--brand-logo-scale));
+  height: calc(11.92px * var(--brand-logo-scale));
+}
+
+.brand-logo__net {
+  position: absolute;
+  left: calc(35.32px * var(--brand-logo-scale));
+  top: 0;
+  width: calc(26.679px * var(--brand-logo-scale));
+  height: calc(26.882px * var(--brand-logo-scale));
+}
+
+.brand-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.brand-text {
+  margin: 0;
+  font-size: 0;
+  white-space: nowrap;
+}
+
+.brand-text__strong {
+  font-size: calc(14px * var(--brand-text-scale));
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.brand-text__muted {
+  font-size: calc(14px * var(--brand-text-scale));
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.topbar__spacer {
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 1px;
+}
+
+.topbar__actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.search-field {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  min-width: 140px;
+  height: 36px;
+  background: var(--color-surface-0);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  flex-shrink: 1;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.search-field:focus-within {
+  border-color: var(--color-search-focus-border);
+  box-shadow: 0 0 0 2px var(--color-focus-ring);
+}
+
+.search-field__icon {
+  position: absolute;
+  left: 9px;
+  top: 9px;
+  width: 16px;
+  height: 16px;
+}
+
+.search-field__placeholder {
+  position: absolute;
+  left: 33px;
+  top: 8.5px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: normal;
+  pointer-events: none;
+}
+
+.search-field__kbd {
+  position: absolute;
+  right: 9px;
+  top: 8.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 20px;
+  height: auto;
+  padding: 2px 6px;
+  background: var(--color-surface-0);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-muted);
+  line-height: normal;
+}
+
+.topbar__icon-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 640px) {
+  .topbar {
+    flex-wrap: nowrap;
+  }
+}
+
+.topbar__notif-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.topbar__notif-wrap .icon-btn {
+  position: relative;
+}
+
+.topbar__notif-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--notif-count-badge-bg);
+  box-shadow: 0 0 0 2px var(--color-ring-on-surface);
+  color: var(--color-on-primary);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* display:inline-flex anula el [hidden] nativo del UA; forzar oculto hasta showBadge() */
+.topbar__notif-badge[hidden] {
+  display: none !important;
+}
+
+.topbar__notif-badge:not([hidden]) {
+  display: inline-flex;
+}
+
+/* Sin notificación pendiente: la campana no se mueve ni en hover */
+#notif-toggle:not(.notif-toggle--pulse) img,
+#notif-toggle:hover:not(.notif-toggle--pulse) img,
+#notif-toggle:focus:not(.notif-toggle--pulse) img {
+  transform: none;
+  animation: none;
+}
+
+/* Tintineo: una sola vez al añadir .notif-toggle--pulse (ver JS animationend) */
+.notif-toggle--pulse img {
+  transform-origin: 50% 12%;
+  animation: notif-bell-ring 0.95s ease-in-out 1 forwards;
+}
+
+@keyframes notif-bell-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  15% {
+    transform: rotate(11deg);
+  }
+  30% {
+    transform: rotate(-10deg);
+  }
+  45% {
+    transform: rotate(7deg);
+  }
+  60% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #notif-toggle img {
+    animation: none !important;
+  }
+}
+
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 220;
+  /* Ancho respecto al icono: no usar casi 100vw o el borde izquierdo sale del viewport */
+  width: min(400px, calc(100vw - 32px));
+  max-width: calc(100vw - 16px);
+  padding: 0;
+  background: var(--color-surface-0);
+  border: 1px solid var(--notif-surface-border);
+  border-radius: 6px; /* ~Lara overlay; antes 12px en Supplynet */
+  box-shadow: var(--shadow-overlay);
+  overflow: hidden;
+}
+
+/* Vista estrecha: panel anclado al viewport para que quepa entero (título + lista) */
+@media (max-width: 767px) {
+  .notif-panel {
+    position: fixed;
+    top: var(--notif-panel-top, calc(env(safe-area-inset-top, 0px) + 96px));
+    right: max(12px, env(safe-area-inset-right, 0px));
+    left: max(12px, env(safe-area-inset-left, 0px));
+    width: auto;
+    max-width: none;
+    max-height: calc(
+      100dvh - var(--notif-panel-top, 96px) - 12px - env(safe-area-inset-bottom, 0px)
+    );
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notif-panel__stack {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notif-panel__list {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .notif-panel--detail .notif-panel__detail {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
+  }
+}
+
+.notif-panel__header {
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--notif-surface-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notif-panel__heading {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.notif-panel__tabs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.notif-panel__tab {
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--color-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.notif-panel__tab:hover {
+  background: var(--surface-hover);
+  color: var(--color-text);
+}
+
+.notif-panel__tab--active {
+  color: var(--notif-primary);
+  box-shadow: inset 0 -2px 0 0 var(--notif-primary);
+  border-radius: 6px 6px 0 0;
+}
+
+.notif-panel__tab:focus-visible {
+  outline: 2px solid var(--notif-primary);
+  outline-offset: 2px;
+}
+
+.notif-panel__tab-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--notif-count-badge-bg);
+  color: var(--color-on-primary);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.notif-panel__tab-badge[hidden] {
+  display: none !important;
+}
+
+.notif-panel--filter-unread .notif-panel__row--read {
+  display: none;
+}
+
+.notif-panel__stack {
+  min-height: 0;
+}
+
+.notif-panel--detail .notif-panel__list {
+  display: none;
+}
+
+.notif-panel__detail {
+  max-height: min(360px, 55dvh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 8px;
+}
+
+.notif-panel__detail-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--notif-surface-border);
+}
+
+.notif-panel__detail-back {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  color: var(--color-muted);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.notif-panel__detail-back:hover {
+  background: var(--surface-hover);
+  color: var(--color-text);
+}
+
+.notif-panel__detail-back:focus-visible {
+  outline: 2px solid var(--notif-primary);
+  outline-offset: 2px;
+}
+
+.notif-panel__detail-back-icon {
+  display: flex;
+  font-size: 0.875rem;
+}
+
+.notif-panel__detail-actions {
+  margin: 0;
+  padding: 0;
+  border: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notif-panel__detail-actions[hidden] {
+  display: none !important;
+}
+
+.notif-panel--detail .notif-panel__footer {
+  display: none;
+}
+
+.notif-panel__detail-body {
+  padding: 12px 16px 12px;
+}
+
+.notif-panel__detail-title {
+  margin: 0 0 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.notif-panel__detail-meta {
+  margin: 0 0 12px;
+  font-size: 0.75rem;
+  color: var(--color-icon-muted);
+  line-height: 1.35;
+}
+
+.notif-panel__detail-text {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+
+.notif-panel__detail-text p {
+  margin: 0 0 10px;
+}
+
+.notif-panel__detail-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Same visual language as .notif-panel__detail-back (ghost / primary text) */
+.notif-panel__detail-cta {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  margin: 0;
+  border: none;
+  border-radius: 6px;
+  color: var(--notif-primary);
+  background: transparent;
+  cursor: pointer;
+  max-width: 100%;
+  text-align: right;
+}
+
+.notif-panel__detail-cta:hover {
+  background: var(--surface-hover);
+}
+
+.notif-panel__detail-cta:focus-visible {
+  outline: 2px solid var(--notif-primary);
+  outline-offset: 2px;
+}
+
+.notif-panel__detail-cta-icon {
+  display: flex;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+#notif-detail-cta-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.notif-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: min(360px, 55dvh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notif-panel__row {
+  margin: 0;
+  border-bottom: 1px solid var(--notif-surface-border);
+}
+
+.notif-panel__row:last-child {
+  border-bottom: none;
+}
+
+.notif-panel__row[hidden] {
+  display: none !important;
+}
+
+.notif-panel__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px 10px 14px;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-surface-0);
+  border-radius: 0;
+  transition: background-color 0.12s ease;
+}
+
+.notif-panel__item:hover {
+  background: var(--surface-hover-muted);
+}
+
+.notif-panel__row--unread .notif-panel__item {
+  background: var(--notif-unread-bg);
+  box-shadow: inset 3px 0 0 var(--notif-primary);
+  padding-left: 11px;
+}
+
+.notif-panel__row--read .notif-panel__item {
+  background: var(--color-surface-0);
+  box-shadow: inset 3px 0 0 transparent;
+  padding-left: 11px;
+}
+
+.notif-panel__row--unread .notif-panel__item:hover {
+  background: var(--notif-unread-bg-hover);
+}
+
+.notif-panel__row--read .notif-panel__item:hover {
+  background: var(--surface-hover-muted);
+}
+
+.notif-panel__row--unread .notif-panel__item-text {
+  font-weight: 600;
+}
+
+.notif-panel__row--read .notif-panel__item-text {
+  font-weight: 400;
+}
+
+.notif-panel__item:focus-visible {
+  outline: none;
+  background: var(--notif-unread-bg-hover);
+  box-shadow: inset 0 0 0 2px var(--notif-primary);
+}
+
+.notif-panel__item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  color: var(--color-icon-muted);
+  background: transparent;
+}
+
+.notif-panel__item-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notif-panel__item-text strong {
+  font-weight: 600;
+}
+
+.notif-panel__item-time {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--color-icon-muted);
+  white-space: nowrap;
+}
+
+.notif-panel__item-chevron {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  color: var(--color-icon-muted);
+  font-size: 0.75rem;
+}
+
+.notif-panel__footer {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--notif-surface-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notif-panel__footer-btn {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--color-muted);
+  background: transparent;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease;
+}
+
+.notif-panel__footer-btn:hover {
+  background: var(--surface-hover);
+  color: var(--color-text);
+}
+
+.notif-panel__footer-btn:focus-visible {
+  outline: 2px solid var(--notif-primary);
+  outline-offset: 2px;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 28px;
+  padding: 10.5px;
+  color: var(--color-icon-muted);
+  transition: background-color 0.15s ease;
+}
+
+.icon-btn:hover {
+  background-color: var(--surface-hover);
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.icon-btn img {
+  width: 14px;
+  height: 14px;
+}
+
+.icon-btn.icon-btn--sidebar .pi {
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.main-content {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 72px;
+  min-height: 0;
+  background: transparent;
+  overflow: auto;
+}
+
+.welcome {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10.588px;
+  font-size: clamp(1.125rem, 3.5vw, 24.706px);
+  line-height: normal;
+  text-align: center;
+  max-width: 100%;
+}
+
+.welcome__prefix {
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.welcome__gradient {
+  font-weight: 700;
+  background: var(--welcome-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.welcome--pending {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.welcome--visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--welcome-title-opacity-dur) ease-out,
+    transform var(--welcome-title-transform-dur) cubic-bezier(0.22, 1, 0.32, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell__lazy-bg {
+    transition: opacity var(--shell-lazy-fade-reduced) ease;
+  }
+
+  html.dark .app-shell__lazy-bg {
+    transition: opacity var(--shell-lazy-fade-reduced) ease;
+  }
+
+  .welcome--pending {
+    transform: none;
+  }
+
+  .welcome--visible {
+    transition: opacity var(--welcome-title-opacity-dur-reduced) ease;
+  }
+}
+
+/* FAB asistente (fuera de #app-frame para evitar recorte por overflow) */
+.prototype-fabs {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right, 0px));
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.prototype-fabs .fab {
+  pointer-events: auto;
+}
+
+.fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 28px;
+  background: var(--fab-chat-bg);
+  border: none;
+  padding: 10.5px;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.fab:hover {
+  filter: brightness(1.05);
+  transform: scale(1.04);
+}
+
+.fab:focus-visible {
+  outline: 2px solid var(--fab-focus-ring);
+  outline-offset: 3px;
+}
+
+.fab:active {
+  transform: scale(0.98);
+}
+
+.fab--chatbot {
+  box-shadow: var(--shadow-fab-chat);
+}
+
+.fab__icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  max-width: none;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+/* Layout estrecho (tablet en portrait): sidebar a la vista, sin drawer ni hamburguesa */
+@media (min-width: 640px) and (max-width: 767px) {
+  .icon-btn.topbar__menu-btn {
+    display: none;
+  }
+
+  .sidebar__collapse-row {
+    display: block;
+  }
+
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .sidebar {
+    position: relative;
+    top: auto;
+    left: auto;
+    height: auto;
+    transform: none;
+    flex: 0 0 var(--sidebar-width);
+    width: var(--sidebar-width);
+    max-width: none;
+    box-shadow: none;
+    padding-top: 10px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .topbar__spacer {
+    display: block;
+  }
+
+  .topbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 12px 16px;
+  }
+
+  .brand-title,
+  .topbar__icon-group,
+  .topbar__actions {
+    grid-area: unset;
+  }
+
+  .brand-title {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .topbar__actions {
+    flex: 1 1 auto;
+    min-width: 0;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    width: auto;
+  }
+
+  .topbar__icon-group {
+    flex-shrink: 0;
+  }
+
+  .search-field {
+    width: 100%;
+    max-width: 220px;
+    min-width: 140px;
+    flex-shrink: 1;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .app-main {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+/* Drawer + hamburguesa solo cuando el sidebar no cabe en flujo (muy estrecho) */
+@media (max-width: 639px) {
+  .topbar__menu-wrap {
+    display: block;
+    grid-area: topbar-menu;
+  }
+
+  .icon-btn.topbar__menu-btn {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .sidebar__collapse-row {
+    display: none;
+  }
+
+  .sidebar-backdrop {
+    top: var(--topbar-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .topbar__spacer {
+    display: none;
+  }
+
+  /*
+   * Fila 1: menú | marca | iconos (siempre a la derecha)
+   * Fila 2: búsqueda a ancho completo (nunca arriba con iconos abajo)
+   */
+  .topbar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "topbar-menu topbar-brand topbar-icons"
+      "topbar-search topbar-search topbar-search";
+    gap: 10px 12px;
+    align-items: center;
+  }
+
+  .brand-title {
+    grid-area: topbar-brand;
+    flex: unset;
+    min-width: 0;
+  }
+
+  .topbar__icon-group {
+    grid-area: topbar-icons;
+    justify-self: end;
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  .topbar__actions {
+    grid-area: topbar-search;
+    flex: unset;
+    min-width: 0;
+    width: 100%;
+    justify-content: stretch;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .search-field {
+    width: 100%;
+    max-width: none;
+    flex: unset;
+    min-width: 0;
+  }
+
+  /* Navegación vía panel; el aside no ocupa espacio en el layout */
+  .sidebar {
+    display: none !important;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="frame" id="app-frame" data-node-id="1:2579">
+      <script>
+        try {
+          if (
+            window.matchMedia("(min-width: 768px)").matches &&
+            localStorage.getItem("supplynet-sidebar-collapsed") === "1"
+          ) {
+            document.getElementById("app-frame").classList.add("frame--sidebar-collapsed");
+          }
+        } catch (e) {}
+      </script>
+      <div class="app-shell" data-node-id="12:770">
+        <div class="app-shell__lazy-bg" aria-hidden="true"></div>
+        <div
+          class="sidebar-backdrop"
+          id="sidebar-backdrop"
+          hidden
+          aria-hidden="true"
+        ></div>
+
+        <header class="topbar" data-node-id="12:772">
+          <div class="topbar__menu-wrap">
+            <button
+              type="button"
+              class="icon-btn topbar__menu-btn"
+              id="sidebar-toggle-mobile"
+              aria-controls="mobile-nav-panel"
+              aria-expanded="false"
+              aria-haspopup="dialog"
+              aria-label="Open navigation menu"
+            >
+              <i class="pi pi-bars" aria-hidden="true"></i>
+            </button>
+            <div
+              class="mobile-nav-panel"
+              id="mobile-nav-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-nav-title"
+              hidden
+            >
+              <div class="mobile-nav-panel__header">
+                <h2 class="mobile-nav-panel__title" id="mobile-nav-title">Menu</h2>
+              </div>
+              <nav class="mobile-nav-panel__nav" aria-label="Main navigation">
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-calendar"></i></span>
+                  <span>Appointment control</span>
+                </a>
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-box"></i></span>
+                  <span>Orders</span>
+                </a>
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-truck"></i></span>
+                  <span>Assembly</span>
+                </a>
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-inbox"></i></span>
+                  <span>Picking</span>
+                </a>
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-arrow-right-arrow-left"></i></span>
+                  <span>Interfaces</span>
+                </a>
+                <a class="mobile-nav-panel__link" href="#">
+                  <span class="mobile-nav-panel__icon" aria-hidden="true"><i class="pi pi-chart-line"></i></span>
+                  <span>Statistics</span>
+                </a>
+              </nav>
+            </div>
+          </div>
+          <div class="brand-title" data-node-id="15:102">
+            <div class="brand-logo" data-node-id="31:1913">
+              <img
+                class="brand-logo__supply"
+                src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2034.5956%2011.9197%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22supply%22%3E%0A%3Cpath%20id%3D%22y%22%20d%3D%22M32.4416%203.7794H33.1094L32.1828%206.528C32.0296%206.97596%2031.9021%207.45019%2031.7887%207.82196H31.7612C31.6591%207.45063%2031.5059%206.96458%2031.3671%206.55471L30.0122%202.89355H28.7862L31.0724%208.60446C31.1128%208.698%2031.1385%208.79728%2031.1485%208.89872C31.135%208.99172%2031.1054%209.08166%2031.061%209.16451C30.848%209.65143%2030.5244%2010.082%2030.116%2010.4221C29.8261%2010.6667%2029.4919%2010.8534%2029.1316%2010.9721L29.4132%2011.9197C29.9283%2011.8005%2030.4033%2011.5489%2030.7912%2011.1897C31.5575%2010.5246%2032.1049%209.43819%2032.9115%207.31051L34.5956%202.89355H32.4416V3.7794Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3Cpath%20id%3D%22l%22%20d%3D%22M26.9225%209.09094H28.0457V5.07882e-07H26.9225V9.09094Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3Cpath%20id%3D%22p%22%20d%3D%22M23.2215%202.75167C22.7806%202.73397%2022.3433%202.83678%2021.9564%203.04902C21.5696%203.26127%2021.2479%203.57493%2021.026%203.95629H21.0028L20.9471%202.89355H19.94C19.9658%203.4825%2019.9912%204.12269%2019.9912%204.91658V11.6254H21.1022V5.50553C21.1084%205.34929%2021.1346%205.19449%2021.1801%205.04488C21.2684%204.65712%2021.4829%204.30965%2021.79%204.057C22.0971%203.80434%2022.4794%203.6608%2022.8769%203.6489C24.0636%203.6489%2024.716%204.71165%2024.716%205.95174C24.716%207.36874%2024.0259%208.34303%2022.8384%208.34303C22.5999%208.34406%2022.3638%208.29538%2022.1451%208.20008C21.9265%208.10478%2021.7301%207.96496%2021.5685%207.78955V8.75684C21.9884%209.0751%2022.5033%209.24262%2023.0302%209.23238C24.4861%209.23238%2025.8396%208.13066%2025.8396%205.90445C25.8396%204.02154%2024.7156%202.75167%2023.2215%202.75167Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3Cpath%20id%3D%22p_2%22%20d%3D%22M16.2898%202.75167C15.8489%202.73388%2015.4115%202.83664%2015.0246%203.04889C14.6378%203.26115%2014.3161%203.57486%2014.0942%203.95629H14.071L14.0154%202.89354H13.0083C13.0341%203.4825%2013.0595%204.12269%2013.0595%204.91658V11.6259H14.1704V5.50553C14.1767%205.34929%2014.2029%205.19449%2014.2484%205.04488C14.3366%204.65712%2014.5512%204.30965%2014.8583%204.057C15.1654%203.80434%2015.5477%203.6608%2015.9452%203.6489C17.1327%203.6489%2017.7843%204.71165%2017.7843%205.95174C17.7843%207.36874%2017.0942%208.34303%2015.9075%208.34303C15.669%208.34401%2015.4329%208.29529%2015.2143%208.2C14.9957%208.10471%2014.7993%207.96492%2014.6376%207.78954V8.75683C15.0573%209.07491%2015.5719%209.24242%2016.0984%209.23238C17.5544%209.23238%2018.9079%208.13066%2018.9079%205.90445C18.9079%204.02154%2017.7838%202.75167%2016.2898%202.75167Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3Cpath%20id%3D%22u%22%20d%3D%22M11.5295%202.89355H10.4046V6.69571C10.4054%206.89243%2010.3711%207.08771%2010.3034%207.27241C10.185%207.57005%209.98127%207.82605%209.71777%208.0082C9.45427%208.19036%209.1428%208.29056%208.82252%208.29619C7.80137%208.29619%207.44362%207.49923%207.44362%206.3257V2.89355H6.31869V6.51706C6.31869%208.69422%207.48084%209.23195%208.45163%209.23195C8.86364%209.23823%209.26992%209.13496%209.62891%208.93268C9.98791%208.73041%2010.2867%208.43641%2010.4948%208.08075H10.5224L10.5854%209.09401H11.5821C11.544%208.60796%2011.5308%208.04309%2011.5308%207.40421L11.5295%202.89355Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3Cpath%20id%3D%22S%22%20d%3D%22M3.01134%204.19933C1.82642%203.73867%201.30359%203.34195%201.30359%202.53536C1.30359%201.94641%201.74629%201.24228%202.92376%201.24228C3.49424%201.23935%204.05637%201.37935%204.55883%201.64952L4.86535%200.743533C4.27711%200.442909%203.6221%200.296749%202.96186%200.318784C1.28957%200.318784%200.175154%201.31892%200.175154%202.66366C0.175154%203.87967%201.04611%204.61006%202.45216%205.10882C3.61387%205.55721%204.07234%206.01787%204.07234%206.82445C4.07234%207.69497%203.40806%208.29662%202.27175%208.29662C1.5696%208.29022%200.882028%208.09561%200.280685%207.73306L0%208.66839C0.671956%209.03865%201.4284%209.22844%202.19556%209.21925C4.2256%209.21925%205.2069%208.06805%205.2069%206.73906C5.2069%205.4692%204.46643%204.76858%203.01046%204.20327%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"
+                alt=""
+                width="42"
+                height="15"
+              />
+              <img
+                class="brand-logo__net"
+                src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2026.6795%2026.8825%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22net%22%3E%0A%3Cpath%20id%3D%22Fill%205%22%20d%3D%22M13.34%2026.8824C11.5849%2026.8862%209.84667%2026.5399%208.22699%2025.8639C6.60732%2025.1879%205.1387%2024.1957%203.90703%2022.9454C1.40397%2020.4155%200%2017.0002%200%2013.4413C0%209.88241%201.40397%206.46717%203.90703%203.93723C5.14089%202.68988%206.6099%201.69963%208.22902%201.02381C9.84815%200.347983%2011.5852%200%2013.3397%200C15.0943%200%2016.8313%200.347983%2018.4505%201.02381C20.0696%201.69963%2021.5386%202.68988%2022.7725%203.93723C25.2755%206.46717%2026.6795%209.88241%2026.6795%2013.4413C26.6795%2017.0002%2025.2755%2020.4155%2022.7725%2022.9454C21.5408%2024.1957%2020.0722%2025.1879%2018.4525%2025.8639C16.8328%2026.5399%2015.0946%2026.8862%2013.3395%2026.8824H13.34ZM4.18334%209.88591C3.90388%209.88671%203.62732%209.94262%203.3695%2010.0504C3.11167%2010.1582%202.87763%2010.3158%202.68078%2010.5142C2.48392%2010.7125%202.32812%2010.9478%202.22228%2011.2064C2.11644%2011.465%202.06264%2011.742%202.06397%2012.0215V16.8347H3.70429V12.021C3.70428%2011.8811%203.75944%2011.7468%203.85782%2011.6473C3.95619%2011.5478%204.08983%2011.4911%204.22975%2011.4894H7.60147C7.74139%2011.4911%207.87504%2011.5478%207.97341%2011.6473C8.07178%2011.7468%208.12694%2011.8811%208.12693%2012.021V16.8347H9.78477V12.021C9.78609%2011.7416%209.7323%2011.4646%209.62646%2011.206C9.52062%2010.9473%209.36481%2010.7121%209.16796%2010.5137C8.97111%2010.3154%208.73707%2010.1578%208.47924%2010.05C8.22142%209.94218%207.94486%209.88628%207.6654%209.88547L4.18334%209.88591ZM19.7839%208.34849V14.7031C19.7816%2014.9827%2019.8348%2015.26%2019.9402%2015.519C20.0457%2015.778%2020.2014%2016.0136%2020.3983%2016.2121C20.5953%2016.4107%2020.8296%2016.5683%2021.0877%2016.6758C21.3458%2016.7833%2021.6227%2016.8387%2021.9024%2016.8387H24.0625V15.222L21.9742%2015.2272C21.8343%2015.2256%2021.7006%2015.1689%2021.6023%2015.0694C21.5039%2014.9699%2021.4487%2014.8356%2021.4487%2014.6956V11.3099L24.0616%2011.3257V9.88591L21.4487%209.87015V8.34805L19.7839%208.34849ZM12.8215%209.88591C12.2368%209.88518%2011.6743%2010.1094%2011.2504%2010.5121C11.0531%2010.71%2010.8968%2010.9449%2010.7904%2011.2033C10.684%2011.4617%2010.6296%2011.7385%2010.6303%2012.018V14.7035C10.6296%2014.983%2010.684%2015.2598%2010.7904%2015.5182C10.8968%2015.7766%2011.0531%2016.0115%2011.2504%2016.2094C11.5453%2016.4828%2011.9055%2016.6758%2012.2965%2016.7699C12.4682%2016.8135%2012.6447%2016.8355%2012.8219%2016.8356H18.7894V15.2272H12.8198C12.6798%2015.2256%2012.5462%2015.1689%2012.4478%2015.0694C12.3494%2014.9699%2012.2943%2014.8356%2012.2943%2014.6956V12.0219C12.2944%2011.8818%2012.3498%2011.7474%2012.4484%2011.648C12.4969%2011.5987%2012.5547%2011.5597%2012.6185%2011.5331C12.6822%2011.5065%2012.7507%2011.4928%2012.8198%2011.493H16.8505C16.9904%2011.4946%2017.1241%2011.5513%2017.2224%2011.6508C17.3208%2011.7503%2017.376%2011.8846%2017.376%2012.0245V12.0758C17.376%2012.2157%2017.3208%2012.35%2017.2224%2012.4495C17.1241%2012.549%2016.9904%2012.6058%2016.8505%2012.6074H13.2949V14.2148H16.8527C17.03%2014.2154%2017.2066%2014.193%2017.3781%2014.1483C17.8363%2014.0301%2018.2418%2013.7624%2018.5306%2013.3876C18.8194%2013.0128%2018.9749%2012.5524%2018.9725%2012.0793V12.028C18.9735%2011.5552%2018.8175%2011.0953%2018.529%2010.7207C18.2404%2010.3461%2017.8356%2010.0779%2017.3781%209.95816C17.2066%209.91343%2017.03%209.89106%2016.8527%209.8916L12.8215%209.88591ZM24.5783%209.88591C24.5372%209.88585%2024.4966%209.89404%2024.4588%209.90999C24.4229%209.9255%2024.3903%209.94747%2024.3624%209.9748C24.3347%2010.0029%2024.3125%2010.0359%2024.2967%2010.072C24.2729%2010.1283%2024.2663%2010.1904%2024.2781%2010.2504C24.2898%2010.3104%2024.3191%2010.3656%2024.3624%2010.4087C24.3902%2010.4364%2024.4229%2010.4587%2024.4588%2010.4744C24.4964%2010.491%2024.5372%2010.4992%2024.5783%2010.4985C24.6191%2010.4993%2024.6596%2010.491%2024.697%2010.4744C24.734%2010.4585%2024.7675%2010.4355%2024.7956%2010.4067C24.8237%2010.3778%2024.8459%2010.3437%2024.8608%2010.3063C24.8757%2010.2689%2024.8831%2010.2289%2024.8826%2010.1886C24.8821%2010.1484%2024.8736%2010.1086%2024.8577%2010.0716C24.8423%2010.0354%2024.8203%2010.0025%2024.7929%209.97436C24.7649%209.94673%2024.7319%209.92473%2024.6956%209.90956C24.6588%209.89362%2024.6189%209.8857%2024.5787%209.88635L24.5783%209.88591Z%22%20fill%3D%22var%28--fill-0%2C%20%2300263A%29%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"
+                alt="Supplynet"
+                width="33"
+                height="33"
+              />
+            </div>
+            <span class="brand-divider" data-node-id="31:3717" aria-hidden="true"></span>
+            <p class="brand-text" data-node-id="15:103">
+              <span class="brand-text__strong">Supplynet </span>
+              <span class="brand-text__muted">Portal</span>
+            </p>
+          </div>
+          <div class="topbar__spacer" data-node-id="18:99"></div>
+          <div class="topbar__actions" data-node-id="12:862">
+            <div class="search-field" data-node-id="12:863" tabindex="-1">
+              <img class="search-field__icon" src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cg%20id%3D%22search%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M6.20106%202.25672C7.17474%202.06312%208.18427%202.16197%209.10145%202.54188C10.0186%202.92184%2010.8028%203.56602%2011.3544%204.39149C11.9057%205.2168%2012.2%206.18706%2012.2001%207.17957C12.2001%207.83881%2012.0705%208.49239%2011.8182%209.10145C11.63%209.55584%2011.3746%209.978%2011.0643%2010.3573L13.6864%2012.9804C13.7799%2013.074%2013.8328%2013.2006%2013.8329%2013.3329C13.8329%2013.4654%2013.78%2013.5927%2013.6864%2013.6864C13.6402%2013.7332%2013.585%2013.7706%2013.5243%2013.7958C13.4638%2013.8208%2013.3984%2013.8332%2013.3329%2013.8329C13.2673%2013.8331%2013.202%2013.8209%2013.1415%2013.7958C13.0809%2013.7706%2013.0264%2013.7331%2012.9804%2013.6864L10.3573%2011.0643C9.978%2011.3746%209.55584%2011.63%209.10145%2011.8182C8.49239%2012.0705%207.83881%2012.2001%207.17957%2012.2001C6.18706%2012.2%205.2168%2011.9057%204.39149%2011.3544C3.56602%2010.8028%202.92184%2010.0186%202.54188%209.10145C2.16197%208.18427%202.06312%207.17474%202.25672%206.20106C2.45042%205.22727%202.92869%204.33281%203.63075%203.63075C4.33281%202.92869%205.22727%202.45042%206.20106%202.25672ZM7.17957%203.16688C6.38866%203.16696%205.61554%203.40133%204.95789%203.84071C4.30015%204.2802%203.78702%204.9048%203.48426%205.63563C3.18151%206.36653%203.10238%207.17123%203.25672%207.94715C3.41107%208.72299%203.79212%209.43563%204.35145%209.995C4.91078%2010.5543%205.62351%2010.9353%206.3993%2011.0897C7.17522%2011.2441%207.97992%2011.1649%208.71082%2010.8622C9.4417%2010.5594%2010.0662%2010.0463%2010.5057%209.38856C10.9451%208.73087%2011.1795%207.95785%2011.1796%207.16688C11.1796%206.10601%2010.7588%205.08792%2010.0087%204.33778C9.25854%203.5877%208.24039%203.16688%207.17957%203.16688Z%22%20fill%3D%22var%28--fill-0%2C%20%2364748B%29%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A" alt="" width="16" height="16" />
+              <span class="search-field__placeholder" data-node-id="12:865">Search...</span>
+              <kbd class="search-field__kbd" data-node-id="12:866"><span data-node-id="12:867">/</span></kbd>
+            </div>
+          </div>
+          <div class="topbar__icon-group" data-node-id="26:1820">
+              <div class="topbar__notif-wrap">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  id="notif-toggle"
+                  aria-label="Notifications"
+                  aria-expanded="false"
+                  aria-haspopup="dialog"
+                  aria-controls="notif-panel"
+                >
+                  <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2014%2013.2511%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M13.4479%209.83252C13.3798%209.83252%2011.852%209.56024%2011.852%205.10535C11.852%201.95894%2010.0216%200%206.99622%200C3.97083%200%202.14046%201.95894%202.14046%205.10535C2.14046%209.64344%200.559697%209.83252%200.567261%209.83252C0.416814%209.83252%200.272529%209.89229%200.166147%209.99867C0.0597647%2010.1051%200%2010.2493%200%2010.3998C0%2010.5502%200.0597647%2010.6945%200.166147%2010.8009C0.272529%2010.9073%200.416814%2010.967%200.567261%2010.967H4.22042C4.34669%2011.6105%204.69255%2012.19%205.19888%2012.6067C5.7052%2013.0233%206.34053%2013.2511%206.99622%2013.2511C7.65191%2013.2511%208.28724%2013.0233%208.79356%2012.6067C9.29988%2012.19%209.64575%2011.6105%209.77201%2010.967H13.4327C13.5832%2010.967%2013.7275%2010.9073%2013.8339%2010.8009C13.9402%2010.6945%2014%2010.5502%2014%2010.3998C14%2010.2493%2013.9402%2010.1051%2013.8339%209.99867C13.7275%209.89229%2013.5832%209.83252%2013.4327%209.83252H13.4479ZM6.99622%2012.1016C6.6455%2012.1009%206.30363%2011.9914%206.01778%2011.7882C5.73193%2011.585%205.51619%2011.2981%205.40032%2010.967H8.59211C8.47625%2011.2981%208.26051%2011.585%207.97466%2011.7882C7.68881%2011.9914%207.34694%2012.1009%206.99622%2012.1016V12.1016ZM2.27661%209.83252C2.82118%209.0081%203.27499%207.56348%203.27499%205.10535C3.27499%202.64722%204.63641%201.13452%206.99622%201.13452C9.35602%201.13452%2010.7174%202.57915%2010.7174%205.10535C10.7174%207.63155%2011.1713%209.0081%2011.7158%209.83252H2.27661Z%22%20fill%3D%22var%28--fill-0%2C%20%2364748B%29%22%2F%3E%0A%3C%2Fsvg%3E%0A" alt="" width="14" height="14" />
+                  <span
+                    class="topbar__notif-badge"
+                    id="notif-badge"
+                    hidden
+                    aria-hidden="true"
+                  ></span>
+                </button>
+                <div
+                  class="notif-panel"
+                  id="notif-panel"
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="notif-panel-title"
+                  hidden
+                >
+                  <div class="notif-panel__header">
+                    <h2 class="notif-panel__heading" id="notif-panel-title">Notifications</h2>
+                    <div
+                      class="notif-panel__tabs"
+                      role="tablist"
+                      aria-label="Filter notifications"
+                    >
+                      <button
+                        type="button"
+                        class="notif-panel__tab notif-panel__tab--active"
+                        id="notif-tab-all"
+                        role="tab"
+                        aria-selected="true"
+                        aria-controls="notif-tabpanel"
+                      >
+                        All
+                      </button>
+                      <button
+                        type="button"
+                        class="notif-panel__tab"
+                        id="notif-tab-unread"
+                        role="tab"
+                        aria-selected="false"
+                        aria-controls="notif-tabpanel"
+                      >
+                        Unread
+                        <span
+                          class="notif-panel__tab-badge"
+                          id="notif-unread-tab-count"
+                          hidden
+                          aria-hidden="true"
+                        >0</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="notif-panel__stack">
+                  <ul
+                    class="notif-panel__list"
+                    id="notif-tabpanel"
+                    role="tabpanel"
+                    aria-labelledby="notif-tab-all"
+                  >
+                    <li
+                      class="notif-panel__row notif-panel__row--unread"
+                      data-unread="true"
+                      data-notif-key="appointment"
+                    >
+                      <button
+                        type="button"
+                        class="notif-panel__item"
+                        aria-label="Open: New appointment request from María Elena Ríos. View detail and mark as read."
+                      >
+                        <span class="notif-panel__item-icon" aria-hidden="true">
+                          <i class="pi pi-calendar-plus"></i>
+                        </span>
+                        <span class="notif-panel__item-text">
+                          <strong>New appointment request</strong> — María Elena Ríos
+                        </span>
+                        <span class="notif-panel__item-time">5m ago</span>
+                        <span class="notif-panel__item-chevron" aria-hidden="true">
+                          <i class="pi pi-angle-right"></i>
+                        </span>
+                      </button>
+                    </li>
+                    <li
+                      class="notif-panel__row notif-panel__row--unread"
+                      data-unread="true"
+                      data-notif-key="shipment-tms"
+                    >
+                      <button
+                        type="button"
+                        class="notif-panel__item"
+                        aria-label="Open: Shipment TMS-1082 requires your approval. View detail and mark as read."
+                      >
+                        <span class="notif-panel__item-icon" aria-hidden="true">
+                          <i class="pi pi-exclamation-triangle"></i>
+                        </span>
+                        <span class="notif-panel__item-text">
+                          <strong>TMS-1082</strong> requires your approval before dispatch
+                        </span>
+                        <span class="notif-panel__item-time">1h ago</span>
+                        <span class="notif-panel__item-chevron" aria-hidden="true">
+                          <i class="pi pi-angle-right"></i>
+                        </span>
+                      </button>
+                    </li>
+                    <li
+                      class="notif-panel__row notif-panel__row--unread"
+                      data-unread="true"
+                      data-notif-key="comment-load"
+                    >
+                      <button
+                        type="button"
+                        class="notif-panel__item"
+                        aria-label="Open: Comment from John Smith. View detail and mark as read."
+                      >
+                        <span class="notif-panel__item-icon" aria-hidden="true">
+                          <i class="pi pi-comment"></i>
+                        </span>
+                        <span class="notif-panel__item-text">
+                          <strong>John Smith</strong> commented on load #4401
+                        </span>
+                        <span class="notif-panel__item-time">Yesterday</span>
+                        <span class="notif-panel__item-chevron" aria-hidden="true">
+                          <i class="pi pi-angle-right"></i>
+                        </span>
+                      </button>
+                    </li>
+                  </ul>
+                  <div
+                    class="notif-panel__detail"
+                    id="notif-detail"
+                    role="region"
+                    aria-labelledby="notif-detail-title"
+                    hidden
+                  >
+                    <div class="notif-panel__detail-body">
+                      <h3 class="notif-panel__detail-title" id="notif-detail-title"></h3>
+                      <p class="notif-panel__detail-meta" id="notif-detail-meta"></p>
+                      <div class="notif-panel__detail-text" id="notif-detail-text"></div>
+                      <div class="notif-panel__detail-footer">
+                        <button
+                          type="button"
+                          class="notif-panel__detail-back"
+                          id="notif-detail-back"
+                        >
+                          <span class="notif-panel__detail-back-icon" aria-hidden="true">
+                            <i class="pi pi-angle-left"></i>
+                          </span>
+                          <span>Back</span>
+                        </button>
+                        <div class="notif-panel__detail-actions" id="notif-detail-actions" hidden>
+                          <button
+                            type="button"
+                            class="notif-panel__detail-cta"
+                            id="notif-detail-cta"
+                            title="Prototype: in the app this would open the related screen"
+                          >
+                            <span class="notif-panel__detail-cta-icon" aria-hidden="true">
+                              <i class="pi pi-arrow-right"></i>
+                            </span>
+                            <span id="notif-detail-cta-label"></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="notif-panel__footer">
+                    <button
+                      type="button"
+                      class="notif-panel__footer-btn"
+                      id="notif-action-dismiss-all"
+                    >
+                      Dismiss all
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="icon-btn"
+                id="theme-toggle"
+                aria-label="Switch to dark mode"
+                title="Switch to dark mode"
+                aria-pressed="false"
+              >
+                <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2014%2014%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M7.07477%2014C6.78031%2013.9996%206.48616%2013.9808%206.19408%2013.9435C4.63857%2013.7414%203.19371%2013.0315%202.08452%2011.9244C0.975323%2010.8174%200.264062%209.37527%200.0615075%207.82276C-0.172425%206.06808%200.266069%204.28993%201.28926%202.84407C2.31246%201.3982%203.8449%200.391235%205.58001%200.0246246C5.77024%20-0.0184875%205.96897%20-0.00477275%206.15144%200.0640595C6.33391%200.132892%206.49204%200.253797%206.60615%200.411709C6.72307%200.575203%206.78923%200.769404%206.79642%200.970145C6.8036%201.17089%206.75148%201.3693%206.64655%201.5407C6.15344%202.38517%205.96522%203.37282%206.11328%204.339C6.25046%205.22672%206.66749%206.04772%207.30385%206.68286C7.94022%207.318%208.7628%207.73423%209.65223%207.87115V7.87115C10.6213%208.02395%2011.6135%207.83276%2012.4559%207.33084C12.6292%207.22842%2012.8289%207.17916%2013.03%207.1892C13.2312%207.19923%2013.4249%207.26813%2013.5871%207.38729C13.7455%207.49914%2013.8669%207.65548%2013.936%207.83643C14.005%208.01737%2014.0186%208.21473%2013.9749%208.40339C13.6472%209.98702%2012.7814%2011.409%2011.524%2012.4288C10.2667%2013.4487%208.69495%2014.0037%207.07477%2014V14ZM5.3861%201.37136C4.41099%201.65736%203.52722%202.19166%202.82163%202.92174C2.11603%203.65183%201.6129%204.55258%201.36166%205.53548C1.11043%206.51839%201.11974%207.54962%201.38868%208.52784C1.65762%209.50607%202.17693%2010.3976%202.89559%2011.1149C3.61425%2011.8322%204.50752%2012.3505%205.48763%2012.6189C6.46774%2012.8873%207.50096%2012.8966%208.48576%2012.6459C9.47056%2012.3951%2010.373%2011.893%2011.1045%2011.1887C11.836%2010.4845%2012.3714%209.60242%2012.6579%208.62919C11.893%209.0014%2011.0513%209.18951%2010.2003%209.17841C9.34936%209.16732%208.51287%208.95733%207.75792%208.56529C7.00297%208.17325%206.35059%207.61008%205.8531%206.92095C5.35561%206.23181%205.02686%205.4359%204.89323%204.59706C4.72316%203.49682%204.89518%202.37099%205.3861%201.37136V1.37136Z%22%20fill%3D%22var%28--fill-0%2C%20%2364748B%29%22%2F%3E%0A%3C%2Fsvg%3E%0A" alt="" width="14" height="14" />
+              </button>
+              <button type="button" class="icon-btn" aria-label="User profile">
+                <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22none%22%20width%3D%22100%25%22%20height%3D%22100%25%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2014%2013.0964%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M7%208.12863C9.09542%208.12863%2013.9997%208.12877%2014%2012.4187C13.9977%2012.5976%2013.9253%2012.7687%2013.7988%2012.8952C13.6723%2013.0218%2013.5012%2013.0941%2013.3223%2013.0964C13.1434%2013.094%2012.9722%2013.0217%2012.8457%2012.8952C12.7194%2012.7687%2012.6478%2012.5974%2012.6455%2012.4187C12.6454%2010.6576%2011.6874%209.48312%207%209.48312C2.31263%209.48312%201.35464%2010.6576%201.35449%2012.4187C1.35449%2012.5983%201.28329%2012.7711%201.15625%2012.8982C1.0293%2013.0251%200.857226%2013.0963%200.677734%2013.0964C0.498072%2013.0964%200.325283%2013.0252%200.198242%2012.8982C0.0712338%2012.7711%200%2012.5983%200%2012.4187C0.00031866%208.12877%204.90458%208.12863%207%208.12863ZM6.33887%200.0651549C6.99583%20-0.0655222%207.67704%200.0012484%208.2959%200.257538C8.91475%200.513873%209.44423%200.947684%209.81641%201.50461C10.1885%202.06154%2010.3867%202.71663%2010.3867%203.38644C10.3867%204.28469%2010.0306%205.14676%209.39551%205.78195C8.7603%206.41716%207.89831%206.77414%207%206.77414C6.3301%206.77414%205.67517%206.57503%205.11816%206.20285C4.56136%205.83077%204.12746%205.30198%203.87109%204.68332C3.61478%204.06453%203.54715%203.3832%203.67773%202.72629C3.80839%202.06942%204.13099%201.46555%204.60449%200.991913C5.07809%200.518319%205.682%200.1959%206.33887%200.0651549ZM7%201.35422C6.59809%201.35422%206.20528%201.47372%205.87109%201.69699C5.53689%201.9203%205.27589%202.23775%205.12207%202.6091C4.96836%202.98031%204.9285%203.38886%205.00684%203.78293C5.08524%204.17709%205.27836%204.53975%205.5625%204.82394C5.8467%205.10814%206.20932%205.30118%206.60352%205.37961C6.99761%205.458%207.40609%205.41807%207.77734%205.26437C8.14869%205.11056%208.46615%204.84955%208.68945%204.51535C8.91269%204.18118%209.03223%203.78832%209.03223%203.38644C9.03215%202.84772%208.81834%202.33095%208.4375%201.94992C8.05638%201.5688%207.53899%201.35422%207%201.35422Z%22%20fill%3D%22var%28--fill-0%2C%20%2364748B%29%22%2F%3E%0A%3C%2Fsvg%3E%0A" alt="" width="14" height="14" />
+              </button>
+            </div>
+        </header>
+
+        <div class="app-main" data-node-id="12:771">
+          <aside
+            class="sidebar"
+            id="sidebar"
+            data-node-id="12:738"
+            aria-label="Main navigation"
+          >
+            <div class="sidebar__collapse-row" data-node-id="12:739">
+              <button
+                type="button"
+                class="icon-btn icon-btn--sidebar"
+                id="sidebar-toggle"
+                aria-controls="sidebar"
+                aria-expanded="true"
+                aria-label="Collapse sidebar"
+              >
+                <i
+                  class="pi pi-chevron-left icon-btn--sidebar__chevron"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </div>
+            <nav class="sidebar__nav" data-node-id="18:100">
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-calendar" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Appointment control</span>
+              </a>
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-box" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Orders</span>
+              </a>
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-truck" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Assembly</span>
+              </a>
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-inbox" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Picking</span>
+              </a>
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-arrow-right-arrow-left" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Interfaces</span>
+              </a>
+              <a class="nav-item" href="#">
+                <span class="nav-item__icon-wrap"><i class="pi pi-chart-line" aria-hidden="true"></i></span>
+                <span class="nav-item__label">Statistics</span>
+              </a>
+            </nav>
+          </aside>
+
+          <div class="content-column">
+            <main class="main-content" data-node-id="12:870">
+                           <h1 class="welcome welcome--pending" data-node-id="61:71" aria-busy="true">
+                <span class="welcome__prefix" data-node-id="61:72">Welcome to </span>
+                <span class="welcome__gradient" data-node-id="61:73">Supplynet Portal</span>
+              </h1>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prototype-fabs" aria-live="polite">
+      <button type="button" class="fab fab--chatbot" data-node-id="31:3720" aria-label="Assistant">
+        <img
+          class="fab__icon"
+          src="data:image/svg+xml;charset=utf-8,%3Csvg%20preserveAspectRatio%3D%22xMidYMid%20meet%22%20width%3D%2218%22%20height%3D%2218%22%20overflow%3D%22visible%22%20style%3D%22display%3A%20block%3B%22%20viewBox%3D%220%200%2022.7415%2022.6511%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Cpath%20id%3D%22Vector%22%20d%3D%22M8.14762%200.166795C9.53321%20-0.109477%2010.9652%20-0.0417516%2012.3185%200.364061C13.672%200.769965%2014.9053%201.50161%2015.9103%202.49492C16.6901%203.28719%2017.3151%204.21841%2017.7511%205.24101C17.834%205.43851%2017.906%205.64007%2017.9738%205.84258C18.3472%206.10394%2018.7011%206.39228%2019.0304%206.70781C19.8146%207.4966%2020.4392%208.42959%2020.8703%209.45488C21.3226%2010.517%2021.5546%2011.6599%2021.5509%2012.8143C21.5481%2013.8374%2021.3677%2014.8528%2021.0177%2015.8143L22.6838%2021.3084C22.7375%2021.4605%2022.7544%2021.6233%2022.7316%2021.783C22.7088%2021.9427%2022.6471%2022.0944%2022.5529%2022.2254C22.4586%2022.3563%2022.3338%2022.4626%2022.1896%2022.535C22.0453%2022.6073%2021.8852%2022.6442%2021.7238%2022.6414H21.6838C21.5865%2022.6544%2021.488%2022.6544%2021.3908%2022.6414L15.8976%2020.9744C13.8338%2021.7537%2011.5483%2021.7061%209.51872%2020.8416C7.74683%2020.0868%206.28938%2018.7601%205.37028%2017.0857L1.31071%2018.3484C1.21531%2018.3748%201.11671%2018.3883%201.01774%2018.3885C0.856313%2018.3913%200.696246%2018.3544%200.55192%2018.282C0.407617%2018.2097%200.282964%2018.1035%200.188639%2017.9725C0.0943677%2017.8415%200.0328136%2017.6898%200.00992785%2017.5301C-0.0129236%2017.3702%200.00393813%2017.2067%200.0577794%2017.0545L1.7238%2011.5613C1.38299%2010.625%201.20278%209.63776%201.19059%208.6414C1.18796%207.49135%201.41906%206.35257%201.87028%205.29472C2.41732%203.99187%203.27606%202.84309%204.37028%201.94902C5.46454%201.05494%206.76184%200.443162%208.14762%200.166795ZM18.381%209.39336C18.2985%2010.257%2018.0881%2011.1051%2017.7511%2011.908C17.3151%2012.9307%2016.6902%2013.8628%2015.9103%2014.6551C14.7413%2015.8219%2013.2623%2016.6291%2011.6486%2016.9812C10.3197%2017.2711%208.94553%2017.2408%207.63688%2016.9012C7.80342%2017.127%207.98282%2017.3436%208.17692%2017.5477C9.11171%2018.4722%2010.2995%2019.0998%2011.59%2019.3514C12.8806%2019.6028%2014.2172%2019.4677%2015.4308%2018.9617C15.6505%2018.8823%2015.8908%2018.8823%2016.1105%2018.9617L20.1105%2020.1883L18.884%2016.1883C18.8045%2015.9686%2018.8045%2015.7273%2018.884%2015.5076C19.2295%2014.6939%2019.407%2013.8184%2019.4045%2012.9344C19.4076%2012.0654%2019.2382%2011.2043%2018.9064%2010.4012C18.7611%2010.0495%2018.5837%209.71318%2018.381%209.39336ZM9.80387%201.97441C8.91981%201.97187%208.04433%202.14928%207.23063%202.49492C5.65439%203.16018%204.39438%204.4059%203.7111%205.97441C3.36825%206.79129%203.1916%207.66859%203.19157%208.55449C3.19157%209.44046%203.36823%2010.3176%203.7111%2011.1346C3.79047%2011.3541%203.79035%2011.5947%203.7111%2011.8143L2.48454%2015.8143L6.48454%2014.5877C6.7041%2014.5084%206.94469%2014.5083%207.16422%2014.5877C8.78324%2015.2601%2010.6021%2015.268%2012.2267%2014.6092C13.8511%2013.9503%2015.1505%2012.6781%2015.8439%2011.0682C16.234%2010.0709%2016.3788%208.99423%2016.2648%207.92949C16.1508%206.86471%2015.7811%205.84301%2015.1886%204.95097C14.5962%204.05898%2013.7977%203.3225%2012.8605%202.80449C11.9232%202.28648%2010.8745%202.00148%209.80387%201.97441Z%22%20fill%3D%22var%28--fill-0%2C%20white%29%22%2F%3E%0A%3C%2Fsvg%3E%0A"
+          alt=""
+          width="18"
+          height="18"
+        />
+      </button>
+    </div>
+
+    <script>
+/* === app.js === */
+(function () {
+  "use strict";
+
+  /* Tema claro/oscuro: clase html.dark (mismo contrato que PrimeNG darkModeSelector: '.dark'). */
+  var THEME_STORAGE_KEY = "supplynet-theme";
+  var themeRoot = document.documentElement;
+  var themeToggle = document.getElementById("theme-toggle");
+
+  function themeIsDark() {
+    return themeRoot.classList.contains("dark");
+  }
+
+  function themeApply(dark) {
+    themeRoot.classList.toggle("dark", !!dark);
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, dark ? "dark" : "light");
+    } catch (e) {}
+    themeSyncToggle();
+  }
+
+  function themeSyncToggle() {
+    if (!themeToggle) return;
+    var dark = themeIsDark();
+    themeToggle.setAttribute("aria-pressed", dark ? "true" : "false");
+    themeToggle.setAttribute(
+      "aria-label",
+      dark ? "Switch to light mode" : "Switch to dark mode"
+    );
+    themeToggle.setAttribute(
+      "title",
+      dark ? "Switch to light mode" : "Switch to dark mode"
+    );
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", function () {
+      themeApply(!themeIsDark());
+    });
+  }
+  themeSyncToggle();
+})();
+
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "supplynet-sidebar-collapsed";
+  /* Drawer + hamburguesa solo bajo este ancho (sidebar en flujo desde 640px) */
+  var DRAWER_MQ = window.matchMedia("(max-width: 639px)");
+
+  var frame = document.getElementById("app-frame");
+  var sidebar = document.getElementById("sidebar");
+  var backdrop = document.getElementById("sidebar-backdrop");
+  var toggle = document.getElementById("sidebar-toggle");
+  var toggleMobile = document.getElementById("sidebar-toggle-mobile");
+  var menuWrap = document.querySelector(".topbar__menu-wrap");
+  var menuPanel = document.getElementById("mobile-nav-panel");
+
+  if (!frame || !sidebar || !toggle) return;
+
+  frame.classList.add("frame--sidebar-static");
+
+  function endSidebarStatic() {
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        frame.classList.remove("frame--sidebar-static");
+      });
+    });
+  }
+
+  function isDrawerMode() {
+    return DRAWER_MQ.matches;
+  }
+
+  function getLabels() {
+    return sidebar.querySelectorAll(".nav-item__label");
+  }
+
+  function setLabelVisibility(collapsed) {
+    getLabels().forEach(function (el) {
+      if (collapsed && !isDrawerMode()) {
+        el.setAttribute("aria-hidden", "true");
+      } else {
+        el.removeAttribute("aria-hidden");
+      }
+    });
+  }
+
+  function applyDesktopCollapsed(collapsed) {
+    if (collapsed) {
+      frame.classList.add("frame--sidebar-collapsed");
+    } else {
+      frame.classList.remove("frame--sidebar-collapsed");
+    }
+    toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    toggle.setAttribute(
+      "aria-label",
+      collapsed ? "Expand sidebar" : "Collapse sidebar"
+    );
+    setLabelVisibility(collapsed);
+    try {
+      localStorage.setItem(STORAGE_KEY, collapsed ? "1" : "0");
+    } catch (e) {}
+  }
+
+  function syncMobileMenuAria(expanded) {
+    if (toggleMobile) {
+      toggleMobile.setAttribute("aria-expanded", expanded ? "true" : "false");
+      toggleMobile.setAttribute(
+        "aria-label",
+        expanded ? "Close navigation menu" : "Open navigation menu"
+      );
+    }
+  }
+
+  function isMenuPanelOpen() {
+    return menuPanel && !menuPanel.hidden;
+  }
+
+  function openMobileNavPanel() {
+    if (!menuPanel) return;
+    if (typeof window.__supplynetCloseNotificationPanel === "function") {
+      window.__supplynetCloseNotificationPanel();
+    }
+    menuPanel.hidden = false;
+    backdrop.hidden = false;
+    backdrop.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(function () {
+      backdrop.classList.add("sidebar-backdrop--visible");
+    });
+    syncMobileMenuAria(true);
+    document.body.classList.add("drawer-open");
+  }
+
+  function closeMobileNavPanel() {
+    if (!menuPanel) return;
+    menuPanel.hidden = true;
+    backdrop.classList.remove("sidebar-backdrop--visible");
+    document.body.classList.remove("drawer-open");
+    syncMobileMenuAria(false);
+    window.setTimeout(function () {
+      if (!isMenuPanelOpen()) {
+        backdrop.hidden = true;
+        backdrop.setAttribute("aria-hidden", "true");
+      }
+    }, 220);
+  }
+
+  function syncFromStorage() {
+    if (isDrawerMode()) return;
+    try {
+      if (localStorage.getItem(STORAGE_KEY) === "1") {
+        applyDesktopCollapsed(true);
+      }
+    } catch (e) {}
+  }
+
+  function onResize() {
+    if (!isDrawerMode()) {
+      closeMobileNavPanel();
+      backdrop.hidden = true;
+      backdrop.classList.remove("sidebar-backdrop--visible");
+      backdrop.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("drawer-open");
+      syncFromStorage();
+      setLabelVisibility(frame.classList.contains("frame--sidebar-collapsed"));
+    } else {
+      frame.classList.remove("frame--sidebar-collapsed");
+      closeMobileNavPanel();
+      setLabelVisibility(false);
+      syncMobileMenuAria(false);
+    }
+  }
+
+  function onSidebarToggleClick() {
+    if (isDrawerMode()) {
+      if (isMenuPanelOpen()) {
+        closeMobileNavPanel();
+      } else {
+        openMobileNavPanel();
+      }
+    } else {
+      var next = !frame.classList.contains("frame--sidebar-collapsed");
+      applyDesktopCollapsed(next);
+    }
+  }
+
+  toggle.addEventListener("click", onSidebarToggleClick);
+  if (toggleMobile) {
+    toggleMobile.addEventListener("click", function (e) {
+      e.stopPropagation();
+      onSidebarToggleClick();
+    });
+  }
+
+  if (menuWrap) {
+    menuWrap.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  backdrop.addEventListener("click", function () {
+    if (isDrawerMode()) closeMobileNavPanel();
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!isDrawerMode() || !menuPanel || menuPanel.hidden) return;
+    if (menuWrap && !menuWrap.contains(e.target)) {
+      closeMobileNavPanel();
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && isDrawerMode() && isMenuPanelOpen()) {
+      closeMobileNavPanel();
+      if (toggleMobile) toggleMobile.focus();
+      else toggle.focus();
+    }
+  });
+
+  if (menuPanel) {
+    menuPanel.addEventListener("click", function (e) {
+      if (e.target.closest(".mobile-nav-panel__link")) {
+        closeMobileNavPanel();
+      }
+    });
+  }
+
+  DRAWER_MQ.addEventListener("change", onResize);
+  window.addEventListener("resize", onResize);
+
+  if (isDrawerMode()) {
+    syncMobileMenuAria(false);
+    getLabels().forEach(function (el) {
+      el.removeAttribute("aria-hidden");
+    });
+  } else {
+    syncFromStorage();
+    setLabelVisibility(frame.classList.contains("frame--sidebar-collapsed"));
+  }
+
+  window.__supplynetCloseMobileNavPanel = closeMobileNavPanel;
+
+  endSidebarStatic();
+})();
+
+(function () {
+  "use strict";
+
+  var NOTIF_AFTER_WELCOME_MS = 1500;
+  var BELL_RING_AFTER_BADGE_MS = 500;
+  var wrap = document.querySelector(".topbar__notif-wrap");
+  var btn = document.getElementById("notif-toggle");
+  var badge = document.getElementById("notif-badge");
+  var panel = document.getElementById("notif-panel");
+  var list = document.getElementById("notif-tabpanel");
+  var btnDismissAll = document.getElementById("notif-action-dismiss-all");
+  var tabAll = document.getElementById("notif-tab-all");
+  var tabUnread = document.getElementById("notif-tab-unread");
+  var tabUnreadBadge = document.getElementById("notif-unread-tab-count");
+  var detail = document.getElementById("notif-detail");
+  var detailTitle = document.getElementById("notif-detail-title");
+  var detailMeta = document.getElementById("notif-detail-meta");
+  var detailText = document.getElementById("notif-detail-text");
+  var btnDetailBack = document.getElementById("notif-detail-back");
+  var detailActions = document.getElementById("notif-detail-actions");
+  var detailCta = document.getElementById("notif-detail-cta");
+  var detailCtaLabelText = document.getElementById("notif-detail-cta-label");
+
+  if (!wrap || !btn || !badge || !panel || !list || !btnDismissAll) return;
+  if (!tabAll || !tabUnread || !tabUnreadBadge) return;
+  if (
+    !detail ||
+    !detailTitle ||
+    !detailMeta ||
+    !detailText ||
+    !btnDetailBack ||
+    !detailActions ||
+    !detailCta ||
+    !detailCtaLabelText
+  )
+    return;
+
+  var NOTIF_DETAILS = {
+    appointment: {
+      title: "New appointment request",
+      meta: "María Elena Ríos · Warehouse North · 5 minutes ago",
+      html:
+        "<p>María Elena Ríos requested a pickup slot on <strong>Thursday, April 16</strong>, 09:00–11:00.</p><p>Reference <strong>PO-8821</strong>. Confirm or propose another window in TMS.</p>",
+      goLabel: "Go to calendar",
+      goIcon: "pi-calendar",
+      goScreen: "calendar",
+    },
+    "shipment-tms": {
+      title: "Approval required — TMS-1082",
+      meta: "Dispatch · 1 hour ago",
+      html:
+        "<p>Shipment <strong>TMS-1082</strong> is blocked until you approve the route and carrier assignment.</p><p>Review costs and ETA, then approve or reject in the shipment workflow.</p>",
+      goLabel: "Go to shipments & approvals",
+      goIcon: "pi-truck",
+      goScreen: "shipments-approval",
+    },
+    "comment-load": {
+      title: "Comment on load #4401",
+      meta: "John Smith · Yesterday",
+      html:
+        "<p><strong>John Smith</strong> commented on load <strong>#4401</strong>:</p><p>“Please confirm the revised delivery window with the consignee before we reschedule the truck.”</p>",
+      goLabel: "Go to load #4401",
+      goIcon: "pi-map-marker",
+      goScreen: "load-detail",
+    },
+  };
+
+  var notificationPending = false;
+  var unreadCount = 0;
+  var bellRingCanceled = false;
+  var bellRingDelayId = null;
+  var filterUnreadActive = false;
+
+  function countVisibleNotifications() {
+    return list.querySelectorAll(".notif-panel__row:not([hidden])").length;
+  }
+
+  function countUnread() {
+    return list.querySelectorAll(
+      '.notif-panel__row:not([hidden])[data-unread="true"]'
+    ).length;
+  }
+
+  function updateTabBadge() {
+    var n = countUnread();
+    if (n < 1) {
+      tabUnreadBadge.textContent = "0";
+      tabUnreadBadge.hidden = true;
+      tabUnreadBadge.setAttribute("aria-hidden", "true");
+    } else {
+      tabUnreadBadge.textContent = badgeDisplayText(n);
+      tabUnreadBadge.hidden = false;
+      tabUnreadBadge.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function applyFilter() {
+    if (filterUnreadActive) {
+      panel.classList.add("notif-panel--filter-unread");
+    } else {
+      panel.classList.remove("notif-panel--filter-unread");
+    }
+  }
+
+  function selectFilterTab(unreadOnly) {
+    closeNotifDetail();
+    filterUnreadActive = unreadOnly;
+    tabAll.setAttribute("aria-selected", unreadOnly ? "false" : "true");
+    tabUnread.setAttribute("aria-selected", unreadOnly ? "true" : "false");
+    tabAll.classList.toggle("notif-panel__tab--active", !unreadOnly);
+    tabUnread.classList.toggle("notif-panel__tab--active", unreadOnly);
+    list.setAttribute("aria-labelledby", unreadOnly ? "notif-tab-unread" : "notif-tab-all");
+    applyFilter();
+  }
+
+  function syncNotificationState() {
+    var visible = countVisibleNotifications();
+    if (visible < 1) {
+      clearNotification();
+      return;
+    }
+    unreadCount = countUnread();
+    if (unreadCount > 0) {
+      badge.textContent = badgeDisplayText(unreadCount);
+      badge.hidden = false;
+      badge.setAttribute("aria-hidden", "true");
+      btn.setAttribute("aria-label", notifButtonAriaLabel(unreadCount));
+    } else {
+      badge.textContent = "";
+      badge.hidden = true;
+      badge.setAttribute("aria-hidden", "true");
+      btn.setAttribute("aria-label", "Notifications");
+    }
+    updateTabBadge();
+  }
+
+  function badgeDisplayText(n) {
+    return n > 9 ? "9+" : String(n);
+  }
+
+  function notifButtonAriaLabel(n) {
+    if (n === 1) return "Notifications, 1 unread";
+    return "Notifications, " + n + " unread";
+  }
+
+  function showBadge() {
+    var visible = countVisibleNotifications();
+    if (visible < 1) return;
+    notificationPending = true;
+    bellRingCanceled = false;
+    unreadCount = countUnread();
+    syncNotificationState();
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || unreadCount < 1) return;
+
+    if (bellRingDelayId !== null) {
+      window.clearTimeout(bellRingDelayId);
+      bellRingDelayId = null;
+    }
+    bellRingDelayId = window.setTimeout(function () {
+      bellRingDelayId = null;
+      if (bellRingCanceled || !notificationPending || countUnread() < 1) return;
+      var bellImg = btn.querySelector("img");
+      if (!bellImg) return;
+      btn.classList.add("notif-toggle--pulse");
+      bellImg.addEventListener(
+        "animationend",
+        function onBellRingEnd(e) {
+          if (e.animationName !== "notif-bell-ring") return;
+          btn.classList.remove("notif-toggle--pulse");
+        },
+        { once: true }
+      );
+    }, BELL_RING_AFTER_BADGE_MS);
+  }
+
+  function closeNotifDetail() {
+    detail.hidden = true;
+    panel.classList.remove("notif-panel--detail");
+    list.removeAttribute("aria-hidden");
+  }
+
+  function markRowRead(row) {
+    if (!row || row.getAttribute("data-unread") !== "true") return;
+    row.setAttribute("data-unread", "false");
+    row.classList.remove("notif-panel__row--unread");
+    row.classList.add("notif-panel__row--read");
+    syncNotificationState();
+  }
+
+  function openNotifDetail(row) {
+    var key = row && row.getAttribute("data-notif-key");
+    var d = key && NOTIF_DETAILS[key];
+    if (!d) return;
+    detailTitle.textContent = d.title;
+    detailMeta.textContent = d.meta;
+    detailText.innerHTML = d.html;
+    var iconEl = detailCta.querySelector(".notif-panel__detail-cta-icon i");
+    if (iconEl && d.goIcon) iconEl.className = "pi " + d.goIcon;
+    detailCtaLabelText.textContent = d.goLabel || "";
+    detailCta.setAttribute("data-go-screen", d.goScreen || "");
+    detailCta.setAttribute(
+      "aria-label",
+      d.goLabel ? d.goLabel + " (prototype, no navigation)" : "Open related screen"
+    );
+    detailActions.hidden = !d.goLabel;
+    detail.hidden = false;
+    panel.classList.add("notif-panel--detail");
+    list.setAttribute("aria-hidden", "true");
+    markRowRead(row);
+  }
+
+  function syncNotifPanelFixedTop() {
+    var topbar = document.querySelector(".app-shell > .topbar");
+    if (!topbar) return;
+    if (window.matchMedia("(max-width: 767px)").matches && !panel.hidden) {
+      var br = topbar.getBoundingClientRect();
+      panel.style.setProperty(
+        "--notif-panel-top",
+        Math.round(br.bottom + 10) + "px"
+      );
+    } else {
+      panel.style.removeProperty("--notif-panel-top");
+    }
+  }
+
+  function openPanel() {
+    if (typeof window.__supplynetCloseMobileNavPanel === "function") {
+      window.__supplynetCloseMobileNavPanel();
+    }
+    panel.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    syncNotifPanelFixedTop();
+  }
+
+  function closePanel() {
+    closeNotifDetail();
+    panel.hidden = true;
+    btn.setAttribute("aria-expanded", "false");
+    panel.style.removeProperty("--notif-panel-top");
+  }
+
+  function clearNotification() {
+    bellRingCanceled = true;
+    if (bellRingDelayId !== null) {
+      window.clearTimeout(bellRingDelayId);
+      bellRingDelayId = null;
+    }
+    notificationPending = false;
+    unreadCount = 0;
+    filterUnreadActive = false;
+    panel.classList.remove("notif-panel--filter-unread");
+    tabAll.setAttribute("aria-selected", "true");
+    tabUnread.setAttribute("aria-selected", "false");
+    tabAll.classList.add("notif-panel__tab--active");
+    tabUnread.classList.remove("notif-panel__tab--active");
+    list.setAttribute("aria-labelledby", "notif-tab-all");
+    tabUnreadBadge.textContent = "0";
+    tabUnreadBadge.hidden = true;
+    tabUnreadBadge.setAttribute("aria-hidden", "true");
+    closePanel();
+    list.querySelectorAll(".notif-panel__row").forEach(function (row) {
+      row.hidden = true;
+    });
+    badge.textContent = "";
+    badge.hidden = true;
+    badge.setAttribute("aria-hidden", "true");
+    btn.classList.remove("notif-toggle--pulse");
+    btn.setAttribute("aria-label", "Notifications");
+  }
+
+  window.addEventListener(
+    "supplynet:welcome-complete",
+    function () {
+      window.setTimeout(showBadge, NOTIF_AFTER_WELCOME_MS);
+    },
+    { once: true }
+  );
+
+  btn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (!notificationPending) return;
+    if (panel.hidden) {
+      openPanel();
+    } else {
+      closePanel();
+    }
+  });
+
+  window.addEventListener("resize", syncNotifPanelFixedTop);
+
+  document.addEventListener("click", function (e) {
+    if (!panel.hidden && !wrap.contains(e.target)) {
+      closePanel();
+    }
+  });
+
+  panel.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape" || panel.hidden) return;
+    if (panel.classList.contains("notif-panel--detail")) {
+      closeNotifDetail();
+      return;
+    }
+    closePanel();
+    btn.focus();
+  });
+
+  tabAll.addEventListener("click", function () {
+    selectFilterTab(false);
+  });
+
+  tabUnread.addEventListener("click", function () {
+    selectFilterTab(true);
+  });
+
+  list.addEventListener("click", function (e) {
+    var item = e.target.closest(".notif-panel__item");
+    if (!item) return;
+    var row = item.closest(".notif-panel__row");
+    if (!row || row.hidden) return;
+    openNotifDetail(row);
+  });
+
+  btnDetailBack.addEventListener("click", function () {
+    closeNotifDetail();
+    btnDetailBack.focus();
+  });
+
+  detailCta.addEventListener("click", function () {
+    var screen = detailCta.getAttribute("data-go-screen") || "";
+    if (screen && typeof console !== "undefined" && console.log) {
+      console.log("[Supplynet prototype] Simulated navigation:", screen);
+    }
+  });
+
+  btnDismissAll.addEventListener("click", function (e) {
+    e.stopPropagation();
+    if (panel.classList.contains("notif-panel--detail")) return;
+    clearNotification();
+  });
+
+  window.__supplynetCloseNotificationPanel = closePanel;
+})();
+
+/* Degradado del shell + título: load → fuentes → idle → pausa → fade (--shell-lazy-fade) */
+(function () {
+  "use strict";
+
+  var shell = document.querySelector(".app-shell");
+  var welcome = document.querySelector(".welcome");
+  var lazyBg = shell && shell.querySelector(".app-shell__lazy-bg");
+  if (!shell || !welcome) return;
+
+  var pauseMs = 274;
+  var idleMaxMs = 2016;
+  var fadeRaw = getComputedStyle(document.documentElement)
+    .getPropertyValue("--shell-lazy-fade")
+    .trim();
+  var gradientMs = Math.round(parseFloat(fadeRaw) * 1000) || 745;
+
+  function notifyWelcomeComplete() {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var root = document.documentElement;
+    var opMs =
+      Math.round(
+        parseFloat(
+          getComputedStyle(root).getPropertyValue("--welcome-title-opacity-dur").trim()
+        ) * 1000
+      ) || 720;
+    var trMs =
+      Math.round(
+        parseFloat(
+          getComputedStyle(root).getPropertyValue("--welcome-title-transform-dur").trim()
+        ) * 1000
+      ) || 756;
+    var opRedMs =
+      Math.round(
+        parseFloat(
+          getComputedStyle(root)
+            .getPropertyValue("--welcome-title-opacity-dur-reduced")
+            .trim()
+        ) * 1000
+      ) || 324;
+    var fallbackMs = reduce ? opRedMs + 80 : Math.max(opMs, trMs) + 100;
+
+    var finished = false;
+    function finish() {
+      if (finished) return;
+      finished = true;
+      welcome.removeEventListener("transitionend", onTe);
+      window.dispatchEvent(new CustomEvent("supplynet:welcome-complete"));
+    }
+    var gotOpacity = false;
+    var gotTransform = false;
+    function onTe(e) {
+      if (e.target !== welcome) return;
+      if (e.propertyName === "opacity") gotOpacity = true;
+      if (e.propertyName === "transform") gotTransform = true;
+      if (reduce && gotOpacity) finish();
+      if (!reduce && gotOpacity && gotTransform) finish();
+    }
+    welcome.addEventListener("transitionend", onTe);
+    window.setTimeout(finish, fallbackMs);
+  }
+
+  function showTitle() {
+    welcome.classList.remove("welcome--pending");
+    welcome.classList.add("welcome--visible");
+    welcome.setAttribute("aria-busy", "false");
+    notifyWelcomeComplete();
+  }
+
+  function runGradientThenTitle() {
+    shell.classList.add("app-shell--welcome-loaded");
+    if (!lazyBg) {
+      window.setTimeout(showTitle, gradientMs);
+      return;
+    }
+    var done = false;
+    function next() {
+      if (done) return;
+      done = true;
+      lazyBg.removeEventListener("transitionend", onEnd);
+      showTitle();
+    }
+    function onEnd(e) {
+      if (e.target === lazyBg && e.propertyName === "opacity") next();
+    }
+    lazyBg.addEventListener("transitionend", onEnd);
+    window.setTimeout(next, gradientMs + 52);
+  }
+
+  function afterIdle() {
+    window.setTimeout(runGradientThenTitle, pauseMs);
+  }
+
+  window.addEventListener(
+    "load",
+    function () {
+      function queueIdle(fn) {
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(fn, { timeout: idleMaxMs });
+        } else {
+          window.setTimeout(fn, 288);
+        }
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+          queueIdle(afterIdle);
+        });
+      } else {
+        queueIdle(afterIdle);
+      }
+    },
+    { once: true }
+  );
+})();
+
+    </script>
+  </body>
+</html>
